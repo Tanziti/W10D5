@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 function Message({ size }) {
+  const [sizeClass, setSizeClass] = useState('');
   useEffect(() => {
-    console.log('Message', size);
+    setSizeClass(size);
   }, [size]);
   return (
-    <div className="message medium">
-      (Oh my! Your bird is naked!)
+    <div className={`image-area ${sizeClass}`}>
+      (Oh my! Your bird is dry and not tasty!)
     </div>
   );
 };
