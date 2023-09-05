@@ -6,9 +6,26 @@ import { useEffect, useState } from 'react';
 
 function ProductView({ products }) {
   const [selectedProduct, setSelectedProduct] = useState();
-  // TODO: Replace with state variable
-  const [sideOpen, setSideOpen] = useState(true);
 
+  // Because sidePanelOpen is stored as a string, it will be
+  // "truthy" even when "false" (as well as "true")
+  const [sideOpen, setSideOpen] = useState(
+    localStorage.getItem('sidePanelOpen') !== "false"
+  );
+
+  useEffect(() => {
+    console.log(`selectedProduct CHANGED TO`, selectedProduct);
+    if (selectedProduct)
+      setSideOpen(true);
+  }, [selectedProduct]);
+
+
+  useEffect(() => {
+    console.log(`sideOpen CHANGED TO`, sideOpen);
+    localStorage.setItem('sidePanelOpen', sideOpen);
+    if (!sideOpen)
+      setSelectedProduct();
+  }, [sideOpen]);
   return (
     <div className="product-view">
       <div className="product-main-area">
@@ -18,7 +35,8 @@ function ProductView({ products }) {
             <ProductListItem
               key={item.id}
               product={item}
-              onClick={() => console.log('SELECT PRODUCT', item)}
+              isSelected={selectedProduct && selectedProduct.id === item.id}
+              onClick={() => setSelectedProduct(item)}
             />
           )}
         </div>
@@ -30,7 +48,7 @@ function ProductView({ products }) {
             {sideOpen ? '>' : '<'}
           </div>
         </div>
-        <ProductDetails visible={sideOpen} />
+        <ProductDetails visible={sideOpen} product={selectedProduct} />
       </div>
     </div>
   );
